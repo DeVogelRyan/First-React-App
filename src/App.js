@@ -1,25 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState} from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [data,
+        setData] = useState([]);
+
+    function SearchBook(searchQuery) {
+        const apiUrl = `https://api.itbook.store/1.0/search/${searchQuery}`;
+        fetch(apiUrl).then((response) => response.json()).then((data) => {
+            console.log('This is your data', data.books);
+            setData(data.books);
+
+        });
+
+    }
+
+    function checkSearchQuery() {
+        let searchQuery = document.getElementById("searchQuery");
+        if (searchQuery.value !== "") {
+            SearchBook(searchQuery.value);
+        } else {
+            return;
+        }
+    }
+
+    const getData = () => 
+      data.map((value, index) => {
+        return <div key={index}>I am a user {value.title}</div>});
+
+    return (
+        <div>
+            <p>You clicked the button times</p>
+            <input type="text" id="searchQuery" placeholder="give the name of a book"/>
+
+            <button onClick={checkSearchQuery}>Click me</button>
+
+            <div>
+            {getData}
+            </div>
+
+        </div>
+
+    )
+
 }
 
 export default App;
